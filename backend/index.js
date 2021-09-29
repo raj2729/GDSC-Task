@@ -3,6 +3,9 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/config");
 
+// Routes
+const userRoutes = require("./routes/userRoutes");
+
 dotenv.config();
 
 // Connecting to mongodb server
@@ -30,6 +33,8 @@ app.get("/", async (req, res) => {
     });
   }
 });
+
+app.use("/user", userRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
