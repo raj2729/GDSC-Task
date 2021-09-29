@@ -4,7 +4,9 @@
   "description": "Tasks for GDSC Project team",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon index"
+    "server": "nodemon index",
+    "client": "npm start --prefix ../frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\" "
   },
   "author": "Raj",
   "license": "ISC",

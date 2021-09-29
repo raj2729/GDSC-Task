@@ -6,11 +6,14 @@ const User = require("../models/userModel");
 LIST OF CONTROLLERS
 1. Register Student
 2. Login Student
+3. Get user Details - user protected
+4. Update User - user protected
+5. Get all details of user - admin protected
 */
 
 // Register New Student
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, division, sapid, year } = req.body;
 
   const studentExist = await User.findOne({ email });
   if (studentExist) {
@@ -23,6 +26,9 @@ const registerUser = asyncHandler(async (req, res) => {
       name,
       email,
       password,
+      division,
+      year,
+      sapid,
     });
 
     if (student) {
@@ -59,4 +65,74 @@ const userLogin = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { registerUser, userLogin };
+// User can see his/her details - Protected Route
+const getUserDetails = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (user) {
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not Found");
+  }
+});
+
+// User updates his/her own details - Protected Route
+const updateUserDetails = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    if (req.body.name !== user.name) {
+      user.name = req.body.name;
+    }
+    if (req.body.email) {
+      user.email = req.body.email;
+    }
+    if (req.body.division !== user.division) {
+      user.division = req.body.division;
+    }
+    if (req.body.year !== user.year) {
+      user.year = req.body.year;
+    }
+    if (req.body.sapid !== user.sapid) {
+      user.sapid = req.body.sapid;
+    }
+
+    const updatedUser = await user.save();
+    res.status(200).json({
+      success: true,
+      data: updatedUser,
+    });
+  } else {
+    res.status(404).json({
+      success: false,
+      data: "Details could not be updated",
+    });
+  }
+});
+
+// Get all users
+const getAllUserDetails = asyncHandler(async (req, res) => {
+  const users = await User.find({ isAdmin: false });
+  if (users) {
+    res.status(200).json({
+      success: true,
+      data: users,
+    });
+  } else {
+    res.status(404).json({
+      success: false,
+      data: "Details could not be found",
+    });
+  }
+});
+
+module.exports = {
+  registerUser,
+  userLogin,
+  getUserDetails,
+  updateUserDetails,
+  getAllUserDetails,
+};

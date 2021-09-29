@@ -17,9 +17,9 @@ const userSchema = mongoose.Schema(
     },
     division: {
       type: String,
-      enum: ["A", "B", "C"],
-      required: true,
-      default: "",
+      enum: ["A", "B", "C", "Z"],
+      // required: true,
+      default: "Z",
     },
     sapid: {
       type: Number,
@@ -28,9 +28,14 @@ const userSchema = mongoose.Schema(
     },
     year: {
       type: String,
-      enum: ["FE", "SE", "TE", "BE"],
+      enum: ["FE", "SE", "TE", "BE", "UG"],
+      // required: true,
+      default: "UG",
+    },
+    isAdmin: {
+      type: Boolean,
       required: true,
-      default: "",
+      default: false,
     },
   },
   {
